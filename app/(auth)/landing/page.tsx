@@ -10,8 +10,16 @@ const LandingPage = () => {
             🎉 Announcing Snippets
           </span>
           <h1 className="text-5xl md:text-7xl md:leading-[5rem] font-bold mb-4">
-            A home for those cute snippets of{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-red-400 to-green-400">
+            A{" "}
+            <span className="font-serif font-thin bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-red-400 to-green-400">
+              home
+            </span>{" "}
+            for those{" "}
+            <span className="font-serif font-thin bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-red-400 to-green-400">
+              cute
+            </span>{" "}
+            <span className="underline">snippets</span> of{" "}
+            <span className="font-serif font-thin bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-red-400 to-green-400">
               code
             </span>
           </h1>

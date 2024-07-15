@@ -1,7 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { SignInIcon } from "@codesandbox/sandpack-react";
 import { cn } from "@/lib/utils";
 
 const CYCLES_PER_LETTER = 2;
@@ -63,7 +62,7 @@ const EncryptButton = ({
       onMouseEnter={scramble}
       onMouseLeave={stopScramble}
       className={cn(
-        "group cursor-pointer relative overflow-hidden rounded-lg border-[1px] border-neutral-500 bg-blue-900 px-4 py-2 font-mono font-medium uppercase text-neutral-200 transition-colors hover:text-indigo-300",
+        "group cursor-pointer relative overflow-hidden rounded-lg border-[1px] border-neutral-500 bg-blue-900/20 px-4 py-2 font-mono uppercase font-medium text-neutral-200 transition-colors hover:text-indigo-300",
         className
       )}
     >

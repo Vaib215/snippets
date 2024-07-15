@@ -3,4 +3,3 @@ ALTER TABLE "snippet"
 
 --> statement-breakpoint ALTER TABLE "snippet"
 ALTER COLUMN "user_id" DROP NOT NULL;
-

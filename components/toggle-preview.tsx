@@ -8,6 +8,7 @@ import {
 import { getSnippet } from "@/db/queries";
 import { redirect } from "next/navigation";
 import { Code } from "lucide-react";
+import { auth } from "@/auth";
 
 const TogglePreview = async ({ id }: { id: number }) => {
   if (!id)
@@ -17,8 +18,9 @@ const TogglePreview = async ({ id }: { id: number }) => {
         <p className="text-xl">Select a snippet to preview</p>
       </div>
     );
-  const snippet = await getSnippet(id);
-
+  const userId = (await auth())?.user?.email;
+  if (!userId) redirect("/");
+  const snippet = await getSnippet(id, userId);
   if (!snippet) redirect("/");
 
   return (

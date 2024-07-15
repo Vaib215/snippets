@@ -1,5 +1,5 @@
 "use server";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import db from "./index";
 import { InsertSnippet, snippetTable } from "./schema";
 
@@ -7,9 +7,12 @@ export async function createSnippet(data: InsertSnippet) {
   await db.insert(snippetTable).values(data);
 }
 
-export async function getSnippet(id: number) {
+export async function getSnippet(id: number, userId: string) {
   return (
-    await db.select().from(snippetTable).where(eq(snippetTable.id, id))
+    await db
+      .select()
+      .from(snippetTable)
+      .where(and(eq(snippetTable.id, id), eq(snippetTable.userId, userId)))
   ).at(0);
 }
 

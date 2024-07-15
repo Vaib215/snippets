@@ -1,4 +1,3 @@
-"use client";
 import Preview from "./preview";
 import CodeEditor from "./code-editor";
 import {
@@ -6,27 +5,34 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "./ui/resizable";
+import { getSnippet } from "@/db/queries";
+import { redirect } from "next/navigation";
+import { Code } from "lucide-react";
 
-const TogglePreview = ({
-  ui,
-  packages,
-}: {
-  ui: string;
-  packages: string[];
-}) => {
-  if (!ui) return null;
+const TogglePreview = async ({ id }: { id: number }) => {
+  if (!id)
+    return (
+      <div className="w-full h-full grid place-items-center place-content-center gap-4">
+        <Code size={128} />
+        <p className="text-xl">Select a snippet to preview</p>
+      </div>
+    );
+  const snippet = await getSnippet(id);
+
+  if (!snippet) redirect("/");
+
   return (
     <ResizablePanelGroup direction="vertical">
       <ResizablePanel>
         <Preview
-          code={ui}
-          packages={packages}
+          code={snippet.code ?? ""}
+          packages={snippet.packages ?? []}
           className="!h-full !overflow-y-auto !w-full"
         />
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel>
-        <CodeEditor code={ui} readOnly height="100%" />
+        <CodeEditor code={snippet.code ?? ""} readOnly height="100%" />
       </ResizablePanel>
     </ResizablePanelGroup>
   );

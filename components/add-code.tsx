@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "./ui/button";
-import { Eye, Loader2, Plus, Save, X } from "lucide-react";
+import { CheckCircle2, Eye, Loader2, Plus, Save, X } from "lucide-react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -19,6 +19,7 @@ import { saveCode } from "@/utils/code";
 import { useRouter } from "next/navigation";
 import CodeEditor from "./code-editor";
 import { getPackageNames } from "@/app/actions";
+import { toast } from "sonner";
 
 export type AddCodeInputs = {
   name: string;
@@ -41,8 +42,13 @@ export default function AddCode() {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<AddCodeInputs> = async (data) => {
-    if (!window) return;
-    await saveCode({ ...data, id: window.crypto.randomUUID(), code });
+    await saveCode({ ...data, code });
+    toast(
+      <div className="flex">
+        <CheckCircle2 className="mr-2" />
+        <span>Added snippet</span>
+      </div>
+    );
     router.refresh();
     closeRef.current?.click();
   };
@@ -56,10 +62,15 @@ export default function AddCode() {
       return;
     }
     setLoading(true);
-    getPackageNames(code).then((res) => {
-      setPackages(res);
+    const throttleTimeout = setTimeout(async () => {
+      const packages = await getPackageNames(code);
+      setPackages(packages);
       setLoading(false);
-    });
+    }, 1000);
+
+    return () => {
+      clearTimeout(throttleTimeout);
+    };
   }, [code]);
 
   return (

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   AlertDialog,
@@ -11,19 +12,22 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { deleteCode } from "@/utils/code";
+import { toast } from "sonner";
+import { Trash2 } from "lucide-react";
+import { Button } from "./ui/button";
 
 export default function DeleteDialog({
   children,
   id,
-  onAction,
 }: {
   children: React.ReactNode;
-  id: string;
-  onAction?: () => void;
+  id: number;
 }) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+      <AlertDialogTrigger type="button" asChild>
+        {children}
+      </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -35,12 +39,18 @@ export default function DeleteDialog({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => {
-              deleteCode(id);
-              onAction?.();
+            className="bg-destructive text-destructive-foreground"
+            onClick={async () => {
+              await deleteCode(id);
+              toast(
+                <span className="text-destructive">
+                  <Trash2 size={16} className="mr-2" />
+                  Snippet deleted
+                </span>
+              );
             }}
           >
-            Continue
+            Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

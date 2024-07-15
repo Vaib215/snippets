@@ -57,7 +57,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-#radix-\:r3\:-content-preview > div > div > div > div > div > a {
-  display: none;
-}

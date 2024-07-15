@@ -1,34 +1,48 @@
-"use client";
+"use server";
+import { auth } from "@/auth";
+import {
+  createSnippet,
+  deleteSnippet,
+  getSnippetsIdByUser,
+} from "@/db/queries";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
-import { CheckCircle2 } from "lucide-react";
-import { toast } from "sonner";
-
-export async function saveCode(data: Snippet) {
-  if (!window) return;
-  localStorage.codes = JSON.stringify([...getCodes(), data]);
-  toast(
-    <div className="flex">
-      <CheckCircle2 className="mr-2" />
-      <span>Added snippet</span>
-    </div>
-  );
+export async function saveCode(data: Omit<Snippet, "id">) {
+  const userId = (await auth())?.user?.email;
+  await createSnippet({
+    ...data,
+    userId: userId,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+  revalidatePath("/");
 }
 
 export type Snippet = {
-  id: string;
+  id: number;
   name: string;
   code: string;
   packages: string[];
 };
 
-export function getCodes(): Snippet[] {
-  if (!window) return [];
-  return JSON.parse(window.localStorage.codes || "[]");
+export async function getCodes(): Promise<
+  {
+    id: number;
+    name: string;
+  }[]
+> {
+  const userId = (await auth())?.user?.email;
+  if (!userId) return [];
+  const result = await getSnippetsIdByUser(userId);
+  return result.map((res) => ({
+    id: res.id,
+    name: res.name as string,
+  }));
 }
 
-export function deleteCode(id: string) {
-  if (!window) return;
-  localStorage.codes = JSON.stringify(
-    getCodes().filter((code) => code.id !== id)
-  );
+export async function deleteCode(id: number) {
+  await deleteSnippet(id);
+  revalidatePath("/");
+  redirect("/");
 }

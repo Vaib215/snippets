@@ -8,3 +8,4 @@ CREATE TABLE IF NOT EXISTS "snippet" (
     "created_at" timestamp,
     "updated_at" timestamp
 );
+

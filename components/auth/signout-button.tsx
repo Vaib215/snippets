@@ -9,7 +9,7 @@ export function SignOut({ className }: { className?: string }) {
         await signOut();
       }}
     >
-      <EncryptButton children="Sign Out" className={className} />
+      <EncryptButton className={className}>Sign Out</EncryptButton>
     </form>
   );
 }

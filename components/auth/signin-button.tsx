@@ -11,7 +11,7 @@ export function SignIn() {
         });
       }}
     >
-      <EncryptButton className="text-3xl">🚀Let's Go</EncryptButton>
+      <EncryptButton className="text-3xl">🚀Let&apos;s Go</EncryptButton>
     </form>
   );
 }

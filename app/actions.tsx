@@ -1,15 +1,6 @@
 "use server";
-import { createStreamableValue } from "ai/rsc";
-import ui from "@/data/ui.json";
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateText } from "ai";
-
-export async function continueConversation() {
-  const stream = createStreamableValue<string, string>();
-  const render = ui[0];
-  stream.done(render);
-  return stream.value;
-}
 
 export async function getPackageNames(code: string) {
   try {

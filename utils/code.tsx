@@ -1,6 +1,5 @@
 "use client";
 
-import { getPackageNames } from "@/app/actions";
 import { CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 

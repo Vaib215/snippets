@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
 import components from "@/utils/components.json";
@@ -299,7 +300,6 @@ export function cn(...inputs: ClassValue[]) {
         className="!h-full"
         showNavigator
         showOpenInCodeSandbox={false}
-        showRestartButton={false}
         showOpenNewtab={false}
       />
     </SandpackProvider>

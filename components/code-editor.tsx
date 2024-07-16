@@ -18,9 +18,10 @@ export default function CodeEditor({
       height={height ?? "50vh"}
       language="typescript"
       theme="vs-dark"
-      defaultValue={code}
+      value={code}
       onChange={(value) => {
-        setCode?.(value ?? "");
+        if (!value) return;
+        setCode?.(value);
       }}
       options={{
         minimap: { enabled: false },

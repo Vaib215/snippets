@@ -5,13 +5,7 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: {
-    id: string;
-  };
-}) {
+export default async function Home() {
   const session = await auth();
 
   if (!session) {

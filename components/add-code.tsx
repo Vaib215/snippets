@@ -34,11 +34,14 @@ export type AddCodeInputs = {
 
 export default function AddCode() {
   const [internalComponents, setInternalComponents] = useState<string[]>([]);
+  const [code, setCode] = useState<string>("");
+  const [packages, setPackages] = useState<string[]>([]);
   const {
     handleSubmit,
     reset,
     control,
     watch,
+    register,
     formState: { errors },
   } = useForm<AddCodeInputs>();
 
@@ -46,7 +49,11 @@ export default function AddCode() {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<AddCodeInputs> = async (data) => {
-    await saveCode({ ...data, packages: data.packages.split(",") });
+    await saveCode({
+      ...data,
+      code: data.code ?? code,
+      packages: data.packages.length ? data.packages.split(",") : packages,
+    });
     toast(
       <div className="flex">
         <CheckCircle2 className="mr-2" />
@@ -58,7 +65,9 @@ export default function AddCode() {
   };
 
   useEffect(() => {
-    const code = watch("code");
+    reset({
+      code,
+    });
     if (!code) {
       return;
     }
@@ -68,7 +77,7 @@ export default function AddCode() {
     const importedPackages = Array.from(matches, (match) => match[1].trim());
 
     if (importedPackages?.length === 0) {
-      reset({ packages: "" });
+      reset({ packages: undefined });
       setInternalComponents([]);
       return;
     }
@@ -80,10 +89,13 @@ export default function AddCode() {
     const packages = importedPackages
       .filter((p) => !p.startsWith("@/") && !p.startsWith("./"))
       .join(",");
+    setPackages(
+      importedPackages.filter((p) => !p.startsWith("@/") && !p.startsWith("./"))
+    );
     reset({
       packages,
     });
-  }, [watch("code")]);
+  }, [code]);
 
   return (
     <Sheet>
@@ -113,6 +125,7 @@ export default function AddCode() {
             <Controller
               name="name"
               control={control}
+              rules={{ required: true }}
               render={({ field }) => (
                 <Input
                   id="name"
@@ -151,13 +164,7 @@ export default function AddCode() {
               </TooltipProvider>
             </Label>
             <div className="rounded-xl overflow-hidden">
-              <Controller
-                name="code"
-                control={control}
-                render={({ field }) => (
-                  <CodeEditor code={field.value} setCode={field.onChange} />
-                )}
-              />
+              <CodeEditor code={code} setCode={setCode} />
             </div>
             <div>
               <Label htmlFor="packages">
@@ -166,31 +173,26 @@ export default function AddCode() {
                   (optional, change only when you see error in preview)
                 </small>
               </Label>
-              <Controller
-                name="packages"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    id="packages"
-                    type="text"
-                    placeholder="Extracted packages from the code"
-                    {...field}
-                  />
-                )}
+
+              <Input
+                id="packages"
+                type="text"
+                placeholder="Extracted packages from the code"
+                {...register("packages")}
               />
             </div>
           </div>
           <div className="justify-self-start flex gap-x-4">
-            <Button>
+            <Button type="submit">
               <Save className="mr-2" />
               Save Changes
             </Button>
             <PreviewDialog
-              code={watch("code")}
-              packages={watch("packages")?.split(",")}
+              code={code}
+              packages={packages}
               internalComponents={internalComponents}
             >
-              <Button variant={"secondary"}>
+              <Button type="button" variant={"secondary"}>
                 <Eye className="mr-2" />
                 Preview
               </Button>
@@ -200,6 +202,7 @@ export default function AddCode() {
                 ref={closeRef}
                 onClick={() => reset()}
                 variant={"destructive"}
+                type="button"
               >
                 <X className="mr-2" />
                 Cancel

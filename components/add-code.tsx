@@ -18,7 +18,6 @@ import { PreviewDialog } from "./preview-dialog";
 import { saveCode } from "@/utils/code";
 import { useRouter } from "next/navigation";
 import CodeEditor from "./code-editor";
-import { getPackageNames } from "@/app/actions";
 import { toast } from "sonner";
 
 export type AddCodeInputs = {
@@ -30,6 +29,7 @@ export type AddCodeInputs = {
 export default function AddCode() {
   const [code, setCode] = useState("");
   const [packages, setPackages] = useState<string[]>([]);
+  const [internalComponents, setInternalComponents] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -63,8 +63,30 @@ export default function AddCode() {
     }
     setLoading(true);
     const throttleTimeout = setTimeout(async () => {
-      const packages = await getPackageNames(code);
-      setPackages(packages);
+      // Extract packages from the code using regex, can be single line or multiline
+      const importedPackages = code
+        .match(/import\s+{([^}]*)}\s+from\s+['"]([^'"]*)['"]/g)
+        ?.map((match) => {
+          const [, , path] =
+            match?.match(/import\s+{([^}]*)}\s+from\s+['"]([^'"]*)['"]/) || [];
+          return path.trim();
+        });
+      if (importedPackages?.length === 0) {
+        setPackages([]);
+        setInternalComponents([]);
+        setLoading(false);
+        return;
+      }
+      setInternalComponents(
+        (importedPackages as string[])
+          ?.filter((pkg) => pkg.startsWith("@/") || pkg.startsWith("./"))
+          .map((p) => p.split("/").pop() as string)
+      );
+      setPackages(
+        (importedPackages as string[])?.filter(
+          (pkg) => !pkg.startsWith("@/") && !pkg.startsWith("./")
+        )
+      );
       setLoading(false);
     }, 1000);
 
@@ -149,7 +171,11 @@ export default function AddCode() {
               <Save className="mr-2" />
               Save Changes
             </Button>
-            <PreviewDialog code={code} packages={packages}>
+            <PreviewDialog
+              code={code}
+              packages={packages}
+              internalComponents={internalComponents}
+            >
               <Button variant={"secondary"}>
                 <Eye className="mr-2" />
                 Preview

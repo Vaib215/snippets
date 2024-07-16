@@ -60,7 +60,7 @@ const config = {
       },
       cursor: {
         fancy: "url(/cursors/cursor.svg), pointer",
-        pointer: "url(/cursors/pointer.svg), pointer",
+        fancyPointer: "url(/cursors/pointer.svg), pointer",
         add: "url(/cursors/add.svg), pointer",
       },
       keyframes: {

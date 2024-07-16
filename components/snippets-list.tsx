@@ -2,9 +2,14 @@ import { Button } from "./ui/button";
 import { ArrowUp, Bird, Trash2 } from "lucide-react";
 import DeleteDialog from "./delete-dialog";
 import { getCodes } from "@/utils/code";
-import { redirect } from "next/navigation";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
-export default async function SnippetsList() {
+export default async function SnippetsList({
+  className = "",
+}: {
+  className?: string;
+}) {
   const snippets = await getCodes();
 
   if (!snippets.length)
@@ -20,23 +25,18 @@ export default async function SnippetsList() {
     );
 
   return (
-    <ul className="flex flex-col gap-2">
+    <ul className={cn("flex flex-col gap-4", className)}>
       {snippets.map((code) => (
-        <li key={code.id} className="w-full flex">
-          <form
-            action={async () => {
-              "use server";
-              redirect(`?id=${code.id}`);
-            }}
-            className="w-full"
+        <li key={code.id} className="w-full flex gap-x-2 items-center">
+          <Button
+            asChild
+            variant={"secondary"}
+            className="w-full rounded items-center justify-between"
           >
-            <Button
-              variant={"secondary"}
-              className="w-full rounded items-center justify-between"
-            >
+            <Link href={`/snippet/${code.id}`}>
               <span>{code.name}</span>
-            </Button>
-          </form>
+            </Link>
+          </Button>
           <DeleteDialog id={code.id}>
             <Button
               className="h-full rounded group duration-300"

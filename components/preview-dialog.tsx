@@ -6,10 +6,12 @@ export function PreviewDialog({
   code,
   children,
   packages,
+  internalComponents,
 }: {
   code: string;
   children: ReactNode;
   packages: string[];
+  internalComponents: string[];
 }) {
   return (
     <Dialog>
@@ -17,7 +19,12 @@ export function PreviewDialog({
       <DialogContent className="grid aspect-square p-0 sm:max-w-xl w-full">
         <DialogTitle className="p-2 pt-4 text-center">Preview</DialogTitle>
         <div className="aspect-square sm:max-w-xl w-full">
-          <Preview packages={packages} code={code} className="sm:!max-w-xl" />
+          <Preview
+            packages={packages}
+            code={code}
+            internalComponents={internalComponents}
+            className="sm:!max-w-xl"
+          />
         </div>
       </DialogContent>
     </Dialog>

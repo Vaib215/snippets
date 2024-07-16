@@ -9,7 +9,7 @@ async function Navbar() {
 
   if (!session || !session.user) return null;
   return (
-    <nav className="w-full mx-auto flex justify-between items-center">
+    <nav className="w-full mx-auto flex justify-between items-center sticky top-0 bg-background/50 py-1 px-3 backdrop-blur-sm">
       <div className="flex items-center space-x-8">
         <Link href="/" className="text-white font-mono text-2xl font-thin">
           snippets

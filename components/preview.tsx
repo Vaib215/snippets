@@ -1,9 +1,5 @@
 import { cn } from "@/lib/utils";
-import {
-  SandpackConsole,
-  SandpackPreview,
-  SandpackProvider,
-} from "@codesandbox/sandpack-react";
+import { SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
 import components from "@/utils/components.json";
 
 const Preview = ({

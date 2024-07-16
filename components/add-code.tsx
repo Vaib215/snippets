@@ -40,7 +40,6 @@ export default function AddCode() {
     handleSubmit,
     reset,
     control,
-    watch,
     register,
     formState: { errors },
   } = useForm<AddCodeInputs>();

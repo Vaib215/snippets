@@ -15,6 +15,14 @@ const TogglePreview = async ({ id }: { id: number }) => {
   const snippet = await getSnippet(id, userId);
   if (!snippet) redirect("/");
 
+  const regex =
+    /import\s+(?:{[^}]*}|\*\s+as\s+[\w\d_$]+|[\w\d_$]+)\s+from\s+['"]([^'"]*)['"]/g;
+  const matches = snippet.code?.matchAll(regex) ?? [];
+  const importedPackages = Array.from(matches, (match) => match[1].trim());
+  const internalComponents = (importedPackages as string[])
+    ?.filter((pkg) => pkg.startsWith("@/") || pkg.startsWith("./"))
+    .map((p) => p.split("/").pop() as string);
+
   return (
     <ResizablePanelGroup direction="vertical">
       <ResizablePanel>
@@ -22,6 +30,7 @@ const TogglePreview = async ({ id }: { id: number }) => {
           code={snippet.code ?? ""}
           packages={snippet.packages ?? []}
           className="!h-full !overflow-y-auto !w-full"
+          internalComponents={internalComponents}
         />
       </ResizablePanel>
       <ResizableHandle withHandle />

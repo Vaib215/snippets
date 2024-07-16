@@ -62,7 +62,7 @@ const EncryptButton = ({
       onMouseEnter={scramble}
       onMouseLeave={stopScramble}
       className={cn(
-        "group cursor-pointer relative overflow-hidden rounded-lg border-[1px] border-neutral-500 bg-blue-900/20 px-4 py-2 font-mono uppercase font-medium text-neutral-200 transition-colors hover:text-indigo-300",
+        "group cursor-fancyPointer relative overflow-hidden rounded-lg border-[1px] border-neutral-500 bg-blue-900/20 px-4 py-2 font-mono uppercase font-medium text-neutral-200 transition-colors hover:text-indigo-300",
         className
       )}
     >

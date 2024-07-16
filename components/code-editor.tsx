@@ -27,6 +27,7 @@ export default function CodeEditor({
         scrollBeyondLastLine: false,
         wordWrap: "on",
         fontSize: 18,
+        lineNumbers: "off",
         readOnly,
       }}
     />

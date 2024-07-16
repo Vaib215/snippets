@@ -13,7 +13,7 @@ import { Button } from "./ui/button";
 import { CheckCircle2, Eye, Loader2, Plus, Save, X } from "lucide-react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { PreviewDialog } from "./preview-dialog";
 import { saveCode } from "@/utils/code";
 import { useRouter } from "next/navigation";
@@ -35,6 +35,7 @@ export default function AddCode() {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<AddCodeInputs>();
 
@@ -62,37 +63,31 @@ export default function AddCode() {
       return;
     }
     setLoading(true);
-    const throttleTimeout = setTimeout(async () => {
-      // Extract packages from the code using regex, can be single line or multiline
-      const importedPackages = code
-        .match(/import\s+{([^}]*)}\s+from\s+['"]([^'"]*)['"]/g)
-        ?.map((match) => {
-          const [, , path] =
-            match?.match(/import\s+{([^}]*)}\s+from\s+['"]([^'"]*)['"]/) || [];
-          return path.trim();
-        });
-      if (importedPackages?.length === 0) {
-        setPackages([]);
-        setInternalComponents([]);
-        setLoading(false);
-        return;
-      }
-      setInternalComponents(
-        (importedPackages as string[])
-          ?.filter((pkg) => pkg.startsWith("@/") || pkg.startsWith("./"))
-          .map((p) => p.split("/").pop() as string)
-      );
-      setPackages(
-        (importedPackages as string[])?.filter(
-          (pkg) => !pkg.startsWith("@/") && !pkg.startsWith("./")
-        )
-      );
+    // Extract packages from the code using regex, can be single line or multiline
+    const importedPackages = code
+      .match(/import\s+{([^}]*)}\s+from\s+['"]([^'"]*)['"]/g)
+      ?.map((match) => {
+        const [, , path] =
+          match?.match(/import\s+{([^}]*)}\s+from\s+['"]([^'"]*)['"]/) || [];
+        return path.trim();
+      });
+    if (importedPackages?.length === 0) {
+      setPackages([]);
+      setInternalComponents([]);
       setLoading(false);
-    }, 1000);
-
-    return () => {
-      clearTimeout(throttleTimeout);
-    };
+      return;
+    }
+    setInternalComponents(
+      (importedPackages as string[])
+        ?.filter((pkg) => pkg.startsWith("@/") || pkg.startsWith("./"))
+        .map((p) => p.split("/").pop() as string)
+    );
+    setPackages(
+      (importedPackages as string[])?.filter(
+        (pkg) => !pkg.startsWith("@/") && !pkg.startsWith("./")
+      )
+    );
+    setLoading(false);
   }, [code]);
 
   return (
@@ -137,12 +132,13 @@ export default function AddCode() {
               )}
             </Label>
             <div className="rounded-xl overflow-hidden">
-              <CodeEditor code={code} setCode={setCode} />
-              <Input
-                className="hidden"
-                {...register("code", {
-                  required: true,
-                })}
+              <Controller
+                name="code"
+                control={control}
+                defaultValue="// type your code here"
+                render={({ field }) => (
+                  <CodeEditor code={code} setCode={setCode} />
+                )}
               />
             </div>
             <div>

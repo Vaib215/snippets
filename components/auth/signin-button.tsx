@@ -1,7 +1,14 @@
 import { signIn } from "@/auth";
 import EncryptButton from "../hover/button";
+import { cn } from "@/lib/utils";
 
-export function SignIn() {
+export function SignIn({
+  children,
+  className,
+}: {
+  children?: string;
+  className?: string;
+}) {
   return (
     <form
       action={async () => {
@@ -11,7 +18,9 @@ export function SignIn() {
         });
       }}
     >
-      <EncryptButton className="text-3xl">🚀Let&apos;s Go</EncryptButton>
+      <EncryptButton className={cn("text-3xl", className)}>
+        {children ?? "🚀Let&apos;s Go"}
+      </EncryptButton>
     </form>
   );
 }

@@ -1,4 +1,6 @@
-import { serial, text, timestamp, pgTable } from "drizzle-orm/pg-core";
+import { serial, text, timestamp, pgTable, pgEnum } from "drizzle-orm/pg-core";
+
+export const visiblityEnum = pgEnum("visibility", ["public", "private"]);
 
 export const snippetTable = pgTable("snippet", {
   id: serial("id").primaryKey(),
@@ -6,6 +8,7 @@ export const snippetTable = pgTable("snippet", {
   userId: text("user_id"),
   packages: text("packages").array(),
   code: text("code"),
+  visibility: visiblityEnum("visibility").default("private"),
   description: text("description"),
   createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at"),

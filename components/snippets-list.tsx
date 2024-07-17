@@ -1,15 +1,20 @@
 import { Button } from "./ui/button";
-import { ArrowUp, Bird, Pencil, Trash2 } from "lucide-react";
+import { ArrowUp, Bird, Eye, EyeOff, Pencil, Trash2 } from "lucide-react";
 import DeleteDialog from "./delete-dialog";
 import { getCodes } from "@/utils/code";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import AddCode from "./add-code";
+import ShareDialog from "./share-dialog";
+import dayjs from "dayjs";
+import CopyURLToClipboard from "./copy-url";
 
 export default async function SnippetsList({
   className = "",
+  hideOptions = false,
 }: {
   className?: string;
+  hideOptions?: boolean;
 }) {
   const snippets = await getCodes();
 
@@ -26,35 +31,69 @@ export default async function SnippetsList({
     );
 
   return (
-    <ul className={cn("flex flex-col gap-4", className)}>
-      {snippets.map((code) => (
-        <li key={code.id} className="w-full flex gap-x-2 items-center">
+    <ul className={cn("flex flex-col gap-4 p-2", className)}>
+      {snippets.map((snippet) => (
+        <li key={snippet.id} className="w-full flex gap-x-2 items-center">
           <Button
             asChild
+            title="Click to view snippet"
             variant={"secondary"}
             className="w-full rounded items-center justify-between"
           >
-            <Link href={`/snippet/${code.id}`}>
-              <span>{code.name}</span>
+            <Link href={`/snippet/${snippet.id}`}>
+              <span>{snippet.name}</span>
+              {!hideOptions && (
+                <span className="text-muted-foreground hidden md:inline">
+                  Last updated on{" "}
+                  {dayjs(snippet.updatedAt).format("DD MMM, YYYY")} at{" "}
+                  {dayjs(snippet.updatedAt).format("hh:mm A")}
+                </span>
+              )}
             </Link>
           </Button>
-          <AddCode edit={code.id}>
-            <Button className="h-full rounded group duration-300">
+          <CopyURLToClipboard id={snippet.id} hideOptions={hideOptions} />
+          <ShareDialog snippet={snippet}>
+            <Button
+              variant={"outline"}
+              title={`Make snippet ${
+                snippet.visibility === "public" ? "private" : "public"
+              }`}
+              className="h-full rounded group"
+            >
+              {snippet.visibility === "public" ? (
+                <Eye size={16} />
+              ) : (
+                <EyeOff size={16} />
+              )}
+              {!hideOptions && (
+                <span className="hidden ml-2 md:inline">
+                  Make {snippet.visibility === "public" ? "private" : "public"}
+                </span>
+              )}
+            </Button>
+          </ShareDialog>
+          <AddCode edit={snippet.id}>
+            <Button
+              variant={"outline"}
+              title="Edit snippet"
+              className="h-full rounded group"
+            >
               <Pencil size={16} />
-              <span className="w-0 duration-300 opacity-0 group-hover:opacity-100 group-hover:ml-2 group-hover:w-8">
-                Edit
-              </span>
+              {!hideOptions && (
+                <span className="hidden ml-2 md:inline">Edit</span>
+              )}
             </Button>
           </AddCode>
-          <DeleteDialog id={code.id}>
+          <DeleteDialog id={snippet.id}>
             <Button
-              className="h-full rounded group duration-300"
+              title="Delete snippet"
+              className="h-full rounded group"
               variant={"destructive"}
             >
               <Trash2 size={16} />
-              <span className="w-0 duration-300 opacity-0 group-hover:opacity-100 group-hover:ml-2 group-hover:w-12">
-                Delete
-              </span>
+              {!hideOptions && (
+                <span className="hidden ml-2 md:inline">Delete</span>
+              )}
             </Button>
           </DeleteDialog>
         </li>

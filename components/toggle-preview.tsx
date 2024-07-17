@@ -8,7 +8,15 @@ import {
 import { getSnippet } from "@/db/queries";
 import { redirect } from "next/navigation";
 
-const TogglePreview = async ({ id }: { id: number }) => {
+const TogglePreview = async ({
+  id,
+  mode,
+  className,
+}: {
+  id: number;
+  mode?: "vertical" | "horizontal";
+  className?: string;
+}) => {
   const snippet = await getSnippet(id);
   if (!snippet) redirect("/");
 
@@ -21,7 +29,7 @@ const TogglePreview = async ({ id }: { id: number }) => {
     .map((p) => p.split("/").pop() as string);
 
   return (
-    <ResizablePanelGroup direction="vertical">
+    <ResizablePanelGroup direction={mode ?? "vertical"} className={className}>
       <ResizablePanel>
         <Preview
           code={snippet.code ?? ""}

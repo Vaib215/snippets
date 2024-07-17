@@ -14,7 +14,6 @@ import {
 import { deleteCode } from "@/utils/code";
 import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
-import { Button } from "./ui/button";
 
 export default function DeleteDialog({
   children,

@@ -38,20 +38,18 @@ export type Snippet = {
   name: string;
   code: string;
   packages: string[];
+  visibility: "public" | "private";
 };
 
-export async function getCodes(): Promise<
-  {
-    id: number;
-    name: string;
-  }[]
-> {
+export async function getCodes() {
   const userId = (await auth())?.user?.email;
   if (!userId) return [];
   const result = await getSnippetsIdByUser(userId);
   return result.map((res) => ({
     id: res.id,
     name: res.name as string,
+    visibility: res.visibility as "public" | "private",
+    updatedAt: res.updatedAt as Date,
   }));
 }
 

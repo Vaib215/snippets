@@ -15,6 +15,13 @@
       "when": 1721044401212,
       "tag": "0001_flat_ravenous",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1721230150997,
+      "tag": "0002_greedy_polaris",
+      "breakpoints": true
     }
   ]
 }

@@ -4,12 +4,26 @@ import {
   createSnippet,
   deleteSnippet,
   getSnippetsIdByUser,
+  updateSnippet,
 } from "@/db/queries";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function saveCode(data: Omit<Snippet, "id">) {
+export async function saveCode(
+  data: Omit<Snippet, "id"> & {
+    id?: number;
+  }
+) {
   const userId = (await auth())?.user?.email;
+  if (data.id) {
+    await updateSnippet(data.id, {
+      ...data,
+      userId: userId,
+      updatedAt: new Date(),
+    });
+    revalidatePath("/");
+    return;
+  }
   await createSnippet({
     ...data,
     userId: userId,

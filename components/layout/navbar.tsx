@@ -3,6 +3,8 @@ import Link from "next/link";
 import AddCode from "../add-code";
 import { auth } from "@/auth";
 import { UserCard } from "../user-card";
+import { Button } from "../ui/button";
+import { Plus } from "lucide-react";
 
 async function Navbar() {
   const session = await auth();
@@ -16,7 +18,12 @@ async function Navbar() {
         </Link>
       </div>
       <div className="flex items-center space-x-3">
-        <AddCode />
+        <AddCode>
+          <Button>
+            <Plus />
+            Add Snippet
+          </Button>
+        </AddCode>
         <UserCard user={session.user} />
       </div>
     </nav>

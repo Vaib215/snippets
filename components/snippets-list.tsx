@@ -1,9 +1,10 @@
 import { Button } from "./ui/button";
-import { ArrowUp, Bird, Trash2 } from "lucide-react";
+import { ArrowUp, Bird, Pencil, Trash2 } from "lucide-react";
 import DeleteDialog from "./delete-dialog";
 import { getCodes } from "@/utils/code";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import AddCode from "./add-code";
 
 export default async function SnippetsList({
   className = "",
@@ -37,13 +38,21 @@ export default async function SnippetsList({
               <span>{code.name}</span>
             </Link>
           </Button>
+          <AddCode edit={code.id}>
+            <Button className="h-full rounded group duration-300">
+              <Pencil size={16} />
+              <span className="w-0 duration-300 opacity-0 group-hover:opacity-100 group-hover:ml-2 group-hover:w-8">
+                Edit
+              </span>
+            </Button>
+          </AddCode>
           <DeleteDialog id={code.id}>
             <Button
               className="h-full rounded group duration-300"
               variant={"destructive"}
             >
               <Trash2 size={16} />
-              <span className="w-0 opacity-0 group-hover:opacity-100 group-hover:ml-2 group-hover:w-fit">
+              <span className="w-0 duration-300 opacity-0 group-hover:opacity-100 group-hover:ml-2 group-hover:w-12">
                 Delete
               </span>
             </Button>

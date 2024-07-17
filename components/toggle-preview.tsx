@@ -7,12 +7,9 @@ import {
 } from "./ui/resizable";
 import { getSnippet } from "@/db/queries";
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
 
 const TogglePreview = async ({ id }: { id: number }) => {
-  const userId = (await auth())?.user?.email;
-  if (!userId) redirect("/");
-  const snippet = await getSnippet(id, userId);
+  const snippet = await getSnippet(id);
   if (!snippet) redirect("/");
 
   const regex =

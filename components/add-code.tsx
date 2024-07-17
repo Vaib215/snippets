@@ -10,12 +10,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "./ui/button";
-import { CheckCircle2, Eye, FileQuestion, Plus, Save, X } from "lucide-react";
+import { CheckCircle2, Eye, FileQuestion, Loader, Save, X } from "lucide-react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { PreviewDialog } from "./preview-dialog";
-import { saveCode } from "@/utils/code";
+import { saveCode, Snippet } from "@/utils/code";
 import { useRouter } from "next/navigation";
 import CodeEditor from "./code-editor";
 import { toast } from "sonner";
@@ -25,6 +25,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { getSnippet } from "@/db/queries";
 
 export type AddCodeInputs = {
   name: string;
@@ -32,15 +33,24 @@ export type AddCodeInputs = {
   packages: string;
 };
 
-export default function AddCode() {
+export default function AddCode({
+  children,
+  edit,
+}: {
+  children: React.ReactNode;
+  edit?: number;
+}) {
   const [internalComponents, setInternalComponents] = useState<string[]>([]);
+  const [initialEdit, setInitialEdit] = useState<Snippet | null>(null);
   const [code, setCode] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [packages, setPackages] = useState<string[]>([]);
   const {
     handleSubmit,
     reset,
     control,
     register,
+    watch,
     formState: { errors },
   } = useForm<AddCodeInputs>();
 
@@ -48,19 +58,35 @@ export default function AddCode() {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<AddCodeInputs> = async (data) => {
+    setIsLoading(true);
     await saveCode({
       ...data,
       code: data.code ?? code,
       packages: data.packages.length ? data.packages.split(",") : packages,
+      ...(edit ? { id: edit } : {}),
     });
-    toast(
-      <div className="flex">
-        <CheckCircle2 className="mr-2" />
-        <span>Added snippet</span>
-      </div>
-    );
+    toast.success(`${edit ? "Updated" : "Added"} snippet`);
+    setCode("");
+    setPackages([]);
+    setInternalComponents([]);
+    setInitialEdit(null);
+    reset();
+    setIsLoading(false);
     router.refresh();
     closeRef.current?.click();
+  };
+
+  const loadSnippet = async (id: number) => {
+    const snippet = await getSnippet(id);
+    if (!snippet) return;
+    setInitialEdit(snippet as Snippet);
+    setCode(snippet.code!);
+    setPackages(snippet.packages ?? []);
+    reset({
+      name: snippet.name!,
+      code: snippet.code!,
+      packages: snippet.packages?.join(","),
+    });
   };
 
   useEffect(() => {
@@ -96,19 +122,23 @@ export default function AddCode() {
     });
   }, [code]);
 
+  useEffect(() => {
+    if (!edit) return;
+    loadSnippet(edit);
+  }, [edit]);
+
   return (
     <Sheet>
       <SheetTrigger className="self-end" asChild>
-        <Button>
-          <Plus />
-          Add Snippet
-        </Button>
+        {children}
       </SheetTrigger>
       <SheetContent side={"left"} className="sm:max-w-2xl sm:min-w-max w-full">
         <SheetHeader>
-          <SheetTitle>Add Snippet</SheetTitle>
+          <SheetTitle>{edit ? "Edit" : "Add"} Snippet</SheetTitle>
           <SheetDescription>
-            Create mini components that can be resused in your code.
+            {edit
+              ? "Missed something in your snippet? Edit it here."
+              : "Create mini components that can be resused in your code."}
           </SheetDescription>
         </SheetHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
@@ -182,9 +212,23 @@ export default function AddCode() {
             </div>
           </div>
           <div className="justify-self-start flex gap-x-4">
-            <Button type="submit">
-              <Save className="mr-2" />
-              Save Changes
+            <Button
+              type="submit"
+              disabled={
+                isLoading ||
+                (edit
+                  ? initialEdit?.code === code &&
+                    initialEdit?.name === watch("name") &&
+                    initialEdit.packages === packages
+                  : code === "" || !watch("name"))
+              }
+            >
+              {isLoading ? (
+                <Loader className="animate-spin mr-2" />
+              ) : (
+                <Save className="mr-2" />
+              )}
+              {edit ? "Save Changes" : "Create Snippet"}
             </Button>
             <PreviewDialog
               code={code}

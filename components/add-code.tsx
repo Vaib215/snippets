@@ -63,6 +63,7 @@ export default function AddCode({
       ...data,
       code: data.code ?? code,
       packages: data.packages.length ? data.packages.split(",") : packages,
+      visibility: "private",
       ...(edit ? { id: edit } : {}),
     });
     toast.success(`${edit ? "Updated" : "Added"} snippet`);

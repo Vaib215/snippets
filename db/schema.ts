@@ -10,6 +10,7 @@ export const snippetTable = pgTable("snippet", {
   code: text("code"),
   visibility: visiblityEnum("visibility").default("private"),
   description: text("description"),
+  thumbnail: text("thumbnail"),
   createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at"),
 });

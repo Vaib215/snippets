@@ -50,6 +50,7 @@ export async function getCodes() {
     name: res.name as string,
     visibility: res.visibility as "public" | "private",
     updatedAt: res.updatedAt as Date,
+    thumbnail: res.thumbnail as string,
   }));
 }
 

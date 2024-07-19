@@ -6,9 +6,14 @@ import React from "react";
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: {
     id: string;
+  };
+  searchParams: {
+    preview: boolean;
+    userAgent: string;
   };
 }) {
   const session = await auth();
@@ -16,19 +21,27 @@ export default async function Page({
     <div
       className={cn(
         "flex-1 h-[88vh] overflow-hidden grid",
-        session?.user && "grid-cols-2"
+        session?.user &&
+          searchParams.userAgent !== "screenshot" &&
+          !searchParams.preview &&
+          "grid-cols-2"
       )}
     >
       <TogglePreview
         id={parseInt(params.id)}
         mode={session?.user ? "vertical" : "horizontal"}
+        preview={
+          searchParams.userAgent === "screenshot" && searchParams.preview
+        }
       />
-      {session?.user && (
-        <SnippetsList
-          className="p-4 h-[90vh] overflow-x-hidden overflow-y-auto"
-          hideOptions
-        />
-      )}
+      {searchParams.userAgent !== "screenshot" &&
+        !searchParams.preview &&
+        session?.user && (
+          <SnippetsList
+            className="p-4 h-[90vh] overflow-x-hidden overflow-y-auto"
+            hideOptions
+          />
+        )}
     </div>
   );
 }

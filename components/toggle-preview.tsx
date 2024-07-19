@@ -12,12 +12,14 @@ const TogglePreview = async ({
   id,
   mode,
   className,
+  preview = false,
 }: {
   id: number;
   mode?: "vertical" | "horizontal";
   className?: string;
+  preview?: boolean;
 }) => {
-  const snippet = await getSnippet(id);
+  const snippet = await getSnippet(id, preview);
   if (!snippet) redirect("/");
 
   const regex =
@@ -39,9 +41,11 @@ const TogglePreview = async ({
         />
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel>
-        <CodeEditor code={snippet.code ?? ""} readOnly height="100%" />
-      </ResizablePanel>
+      {!preview && (
+        <ResizablePanel>
+          <CodeEditor code={snippet.code ?? ""} readOnly height="100%" />
+        </ResizablePanel>
+      )}
     </ResizablePanelGroup>
   );
 };

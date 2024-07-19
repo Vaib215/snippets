@@ -181,6 +181,7 @@ const Preview = ({
             </style>
           </head>
           <body>
+            <div id="secret"></div>
             <div id="root"></div>
             <script type="module" src="/index.tsx"></script>
           </body>

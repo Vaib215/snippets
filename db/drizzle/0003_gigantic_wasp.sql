@@ -1,1 +1,3 @@
-ALTER TABLE "snippet" ADD COLUMN "thumbnail" text;
+ALTER TABLE "snippet"
+    ADD COLUMN "thumbnail" text;
+

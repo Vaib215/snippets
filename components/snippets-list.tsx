@@ -47,7 +47,7 @@ export default async function SnippetsList({
             <Link href={`/snippet/${snippet.id}`}>
               <CardContent className="w-full px-0 py-0">
                 <Image
-                  src={snippet.thumbnail}
+                  src={snippet.thumbnail ?? "/next.svg"}
                   className="w-full h-full"
                   alt={snippet.name}
                   width={300}

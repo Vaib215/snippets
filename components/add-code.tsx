@@ -10,12 +10,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "./ui/button";
-import { CheckCircle2, Eye, FileQuestion, Loader, Save, X } from "lucide-react";
+import { Eye, FileQuestion, Loader, Save, X } from "lucide-react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { PreviewDialog } from "./preview-dialog";
-import { saveCode, Snippet } from "@/utils/code";
+import { saveCode } from "@/utils/code";
 import { useRouter } from "next/navigation";
 import CodeEditor from "./code-editor";
 import { toast } from "sonner";
@@ -41,7 +41,6 @@ export default function AddCode({
   edit?: number;
 }) {
   const [internalComponents, setInternalComponents] = useState<string[]>([]);
-  const [initialEdit, setInitialEdit] = useState<Snippet | null>(null);
   const [code, setCode] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [packages, setPackages] = useState<string[]>([]);
@@ -50,7 +49,6 @@ export default function AddCode({
     reset,
     control,
     register,
-    watch,
     formState: { errors },
   } = useForm<AddCodeInputs>();
 
@@ -70,7 +68,6 @@ export default function AddCode({
     setCode("");
     setPackages([]);
     setInternalComponents([]);
-    setInitialEdit(null);
     reset();
     setIsLoading(false);
     router.refresh();
@@ -79,8 +76,7 @@ export default function AddCode({
 
   const loadSnippet = async (id: number) => {
     const snippet = await getSnippet(id);
-    if (!snippet) return;
-    setInitialEdit(snippet as Snippet);
+    if (!snippet || !edit) return;
     setCode(snippet.code!);
     setPackages(snippet.packages ?? []);
     reset({
@@ -213,17 +209,7 @@ export default function AddCode({
             </div>
           </div>
           <div className="justify-self-start flex gap-x-4">
-            <Button
-              type="submit"
-              disabled={
-                isLoading ||
-                (edit
-                  ? initialEdit?.code === code &&
-                    initialEdit?.name === watch("name") &&
-                    initialEdit.packages === packages
-                  : code === "" || !watch("name"))
-              }
-            >
+            <Button type="submit" disabled={isLoading}>
               {isLoading ? (
                 <Loader className="animate-spin mr-2" />
               ) : (

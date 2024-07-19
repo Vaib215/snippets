@@ -81,10 +81,7 @@
     "public.visibility": {
       "name": "visibility",
       "schema": "public",
-      "values": [
-        "public",
-        "private"
-      ]
+      "values": ["public", "private"]
     }
   },
   "schemas": {},

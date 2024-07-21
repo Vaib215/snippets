@@ -1,4 +1,3 @@
-"use client";
 import { cn } from "@/lib/utils";
 import { SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
 import components from "@/utils/components.json";
@@ -259,7 +258,7 @@ export function cn(...inputs: ClassValue[]) {
           return acc;
         }, {}),
       }}
-      className={cn("!aspect-square !w-full", className)}
+      className={cn("!w-full", className)}
       options={{
         externalResources: ["https://cdn.tailwindcss.com"],
         visibleFiles: ["App.tsx", "index.html", "index.tsx", "styles.css"],
@@ -292,13 +291,14 @@ export function cn(...inputs: ClassValue[]) {
           clsx: "latest",
           "tailwind-merge": "latest",
           "tailwindcss-animate": "latest",
+          typescript: "latest",
+          "@types/react": "latest",
         },
         environment: "node",
       }}
     >
       <SandpackPreview
         className="!h-full"
-        showNavigator
         showOpenInCodeSandbox={false}
         showOpenNewtab={false}
       />

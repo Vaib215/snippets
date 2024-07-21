@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { SandPackCSS } from "@/components/sandpack-style";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <SandPackCSS />
+      </head>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"

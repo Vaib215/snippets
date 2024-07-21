@@ -9,7 +9,7 @@ export async function createSnippet(data: InsertSnippet) {
   await db.insert(snippetTable).values(data);
 }
 
-export async function getSnippet(id: number) {
+export async function getSnippet(id: number, preview: boolean = false) {
   const userId = (await auth())?.user?.email;
   return (
     await db
@@ -20,7 +20,8 @@ export async function getSnippet(id: number) {
           eq(snippetTable.id, id),
           or(
             eq(snippetTable.visibility, "public"),
-            eq(snippetTable.userId, userId ?? "")
+            eq(snippetTable.userId, userId ?? ""),
+            preview ? eq(snippetTable.visibility, "private") : undefined
           )
         )
       )

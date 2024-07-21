@@ -14,10 +14,10 @@ const TogglePreview = async ({
   className,
 }: {
   id: number;
-  mode?: "vertical" | "horizontal";
+  mode?: "vertical" | "horizontal" | "preview";
   className?: string;
 }) => {
-  const snippet = await getSnippet(id);
+  const snippet = await getSnippet(id, mode === "preview");
   if (!snippet) redirect("/");
 
   const regex =
@@ -27,6 +27,16 @@ const TogglePreview = async ({
   const internalComponents = (importedPackages as string[])
     ?.filter((pkg) => pkg.startsWith("@/") || pkg.startsWith("./"))
     .map((p) => p.split("/").pop() as string);
+
+  if (mode === "preview") {
+    return (
+      <Preview
+        code={snippet.code ?? ""}
+        packages={snippet.packages ?? []}
+        internalComponents={internalComponents}
+      />
+    );
+  }
 
   return (
     <ResizablePanelGroup direction={mode ?? "vertical"} className={className}>

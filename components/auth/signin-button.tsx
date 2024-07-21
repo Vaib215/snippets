@@ -19,7 +19,7 @@ export function SignIn({
       }}
     >
       <EncryptButton className={cn("text-3xl", className)}>
-        {children ?? "🚀Let&apos;s Go"}
+        {children ?? "🚀Let's Go"}
       </EncryptButton>
     </form>
   );

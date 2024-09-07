@@ -66,6 +66,7 @@ export function PreviewDialog({
           packages={packages}
           code={code}
           internalComponents={internalComponents}
+          className="flex-1"
         />
       </DialogContent>
     </Dialog>

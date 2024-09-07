@@ -1,5 +1,13 @@
 import { Button } from "./ui/button";
-import { ArrowUp, Bird, Eye, EyeOff, Pencil, Trash2 } from "lucide-react";
+import {
+  ArrowUp,
+  Bird,
+  Eye,
+  EyeIcon,
+  EyeOff,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import DeleteDialog from "./delete-dialog";
 import { getCodes } from "@/utils/code";
 import Link from "next/link";
@@ -52,6 +60,17 @@ export default async function SnippetsList({
             </Link>
           </Button>
           <CopyURLToClipboard id={snippet.id} hideOptions={hideOptions} />
+          <Button
+            variant={"outline"}
+            size={"icon"}
+            title="Preview snippet"
+            className="h-full rounded group"
+            asChild
+          >
+            <Link href={`/snippet/${snippet.id}?mode=preview`}>
+              <EyeIcon size={16} />
+            </Link>
+          </Button>
           <ShareDialog snippet={snippet}>
             <Button
               variant={"outline"}

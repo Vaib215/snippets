@@ -12,7 +12,6 @@ import DeleteDialog from "./delete-dialog";
 import { getCodes } from "@/utils/code";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import AddCode from "./add-code";
 import ShareDialog from "./share-dialog";
 import dayjs from "dayjs";
 import CopyURLToClipboard from "./copy-url";
@@ -91,18 +90,19 @@ export default async function SnippetsList({
               )}
             </Button>
           </ShareDialog>
-          <AddCode edit={snippet.id}>
-            <Button
-              variant={"outline"}
-              title="Edit snippet"
-              className="h-full rounded group"
-            >
+          <Button
+            asChild
+            variant={"outline"}
+            title="Edit snippet"
+            className="h-full rounded group"
+          >
+            <Link href={`?edit=${snippet.id}`}>
               <Pencil size={16} />
               {!hideOptions && (
                 <span className="hidden ml-2 md:inline">Edit</span>
               )}
-            </Button>
-          </AddCode>
+            </Link>
+          </Button>
           <DeleteDialog id={snippet.id}>
             <Button
               title="Delete snippet"

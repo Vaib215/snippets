@@ -44,6 +44,7 @@ export default function AddCode({
   const [code, setCode] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [packages, setPackages] = useState<string[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const {
     handleSubmit,
     reset,
@@ -122,10 +123,19 @@ export default function AddCode({
   useEffect(() => {
     if (!edit) return;
     loadSnippet(edit);
+    setIsOpen(true);
   }, [edit]);
 
   return (
-    <Sheet>
+    <Sheet
+      open={isOpen}
+      onOpenChange={(open) => {
+        setIsOpen(open);
+        if (edit && !open) {
+          router.push("/");
+        }
+      }}
+    >
       <SheetTrigger className="self-end" asChild>
         {children}
       </SheetTrigger>

@@ -49,6 +49,7 @@ export default function AddCode({
     handleSubmit,
     reset,
     control,
+    getValues,
     register,
     formState: { errors },
   } = useForm<AddCodeInputs>();
@@ -62,8 +63,8 @@ export default function AddCode({
       ...data,
       code: data.code ?? code,
       packages: data.packages.length ? data.packages.split(",") : packages,
-      visibility: "private",
       ...(edit ? { id: edit } : {}),
+      visibility: "private",
     });
     toast.success(`${edit ? "Updated" : "Added"} snippet`);
     setCode("");
@@ -90,6 +91,7 @@ export default function AddCode({
   useEffect(() => {
     reset({
       code,
+      name: getValues("name"),
     });
     if (!code) {
       return;
@@ -117,6 +119,8 @@ export default function AddCode({
     );
     reset({
       packages,
+      name: getValues("name"),
+      code: getValues("code"),
     });
   }, [code]);
 

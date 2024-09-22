@@ -1,11 +1,13 @@
 "use server";
 import { auth } from "@/auth";
+import db from "@/db";
 import {
   createSnippet,
   deleteSnippet,
   getSnippetsIdByUser,
   updateSnippet,
 } from "@/db/queries";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -16,8 +18,15 @@ export async function saveCode(
 ) {
   const userId = (await auth())?.user?.email;
   if (data.id) {
+    const { visibility } = (await db.query.snippetTable.findFirst({
+      columns: {
+        visibility: true,
+      },
+      where: (table) => eq(table.id, data.id!),
+    })) as { visibility: "public" | "private" | null };
     await updateSnippet(data.id, {
       ...data,
+      visibility: visibility ?? "private",
       userId: userId,
       updatedAt: new Date(),
     });

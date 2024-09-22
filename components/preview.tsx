@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
 import components from "@/utils/components.json";
+import { Iframe } from "./iframe";
 
 const Preview = ({
   code,

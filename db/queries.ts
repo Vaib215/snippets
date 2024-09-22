@@ -28,6 +28,18 @@ export async function getSnippet(id: number, preview: boolean = false) {
   ).at(0);
 }
 
+export async function getSnippetName(id: number) {
+  const userId = (await auth())?.user?.email;
+  return db.query.snippetTable.findFirst({
+    columns: {
+      name: true,
+    },
+    where(fields, operators) {
+      return and(eq(fields.id, id), eq(fields.userId, userId ?? ""));
+    },
+  });
+}
+
 export async function getSnippetsIdByUser(userId: string) {
   return db.query.snippetTable.findMany({
     columns: {

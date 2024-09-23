@@ -7,7 +7,7 @@ import {
   getSnippetsIdByUser,
   updateSnippet,
 } from "@/db/queries";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 

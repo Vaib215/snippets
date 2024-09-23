@@ -35,7 +35,10 @@ export async function getSnippetName(id: number) {
       name: true,
     },
     where(fields, operators) {
-      return and(eq(fields.id, id), eq(fields.userId, userId ?? ""));
+      return and(
+        eq(fields.id, id),
+        or(eq(fields.userId, userId ?? ""), eq(fields.visibility, "public"))
+      );
     },
   });
 }

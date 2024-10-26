@@ -1,4 +1,5 @@
 import { SignIn } from "@/components/auth/signin-button";
+import Image from "next/image";
 
 const LandingPage = () => {
   return (
@@ -9,6 +10,18 @@ const LandingPage = () => {
           <span className="inline-block bg-gray-800 text-sm text-gray-300 rounded-full px-3 py-1 mb-4">
             🎉 Announcing Snippets
           </span>
+          <div className="relative size-32 p-1 mx-auto my-4">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#FCA702] via-[#CD2C4A] to-[#2EB3BA]" />
+            <div className="relative rounded-full overflow-hidden bg-white/20">
+              <Image
+                src="/logo.png"
+                alt="logo"
+                width={150}
+                height={150}
+                className="relative w-full h-full z-10"
+              />
+            </div>
+          </div>
           <h1 className="text-5xl md:text-7xl md:leading-[5rem] font-bold mb-4">
             A{" "}
             <span className="font-serif font-thin bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-red-400 to-green-400">
